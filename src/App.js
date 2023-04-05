@@ -12,7 +12,11 @@ function App() {
     198, 199, 200, 228, 229, 230, 258, 259, 260, 288, 289, 290, 318, 319, 320,
     350, 378, 379, 409, 410,
   ];
-  const dark = [114, 115, 145, 146, 177, 208, 593, 624, 625];
+  const dark = [
+    687, 718, 719, 788, 720, 555, 585, 586, 615, 616, 617, 645, 646, 647, 675,
+    676, 677, 678, 705, 706, 707, 708, 735, 736, 737, 738, 739, 734, 762, 763,
+    764, 765, 766, 767, 768, 769, 750, 752, 751, 753,
+  ];
 
   const handleMagicMarble = () => {
     const randomColors = [
@@ -39,23 +43,20 @@ function App() {
     setColors(newColors);
   };
 
-  function darkenColor(color) {
-    // parse the hex color code and convert it to RGB values
-    const red = parseInt(color.substring(1, 3), 16);
-    const green = parseInt(color.substring(3, 5), 16);
-    const blue = parseInt(color.substring(5, 7), 16);
-
-    // reduce each RGB value by 15%
-    const darkenedRed = Math.floor(red * 0.65);
-    const darkenedGreen = Math.floor(green * 0.65);
-    const darkenedBlue = Math.floor(blue * 0.65);
-
-    // convert the darkened RGB values back to hex color code
-    const darkenedColor = `#${darkenedRed.toString(16)}${darkenedGreen.toString(
-      16
-    )}${darkenedBlue.toString(16)}`;
-
-    return darkenedColor;
+  function adjust(color, amount) {
+    return (
+      "#" +
+      color
+        .replace(/^#/, "")
+        .replace(/../g, (color) =>
+          (
+            "0" +
+            Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(
+              16
+            )
+          ).substr(-2)
+        )
+    );
   }
 
   return (
@@ -74,14 +75,7 @@ function App() {
       >
         {colors.map((color, i) => {
           if (shine.includes(i)) color = "white";
-          let div = Math.floor(i / 30);
-          if (
-            i > 654 ||
-            (i % 30) - div > 22 ||
-            i % 30 < div + 3 ||
-            dark.includes(i)
-          )
-            color = darkenColor(color);
+          if (i > 781 || dark.includes(i)) color = adjust(color, -80);
           return (
             <div key={i} style={{ backgroundColor: color }} id={`${i}`}></div>
           );
