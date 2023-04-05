@@ -6,7 +6,7 @@ function App() {
   const cols = 31;
   const radius = 15;
 
-  const [colors, setColors] = useState(Array(rows * cols).fill("#FFFFFF"));
+  const [colors, setColors] = useState(Array(rows * cols).fill("#000000"));
   const [name, setName] = useState("No Marble");
 
   const shine = [
@@ -16,7 +16,7 @@ function App() {
   const dark = [
     687, 718, 719, 788, 720, 555, 585, 586, 615, 616, 617, 645, 646, 647, 675,
     676, 677, 678, 705, 706, 707, 708, 735, 736, 737, 738, 739, 734, 762, 763,
-    764, 765, 766, 767, 768, 769, 750, 752, 751, 753,
+    764, 765, 766, 767, 768, 769, 750, 752, 751, 753, 524,
   ];
 
   const magicalAdjectives = [
@@ -389,9 +389,9 @@ function App() {
         let color =
           randomColors[Math.floor(Math.random() * randomColors.length)];
         if (i > 781 || dark.includes(i)) color = adjust(color, -80);
-        return dist <= radius - 2 ? color : "#FFFFFF";
+        return dist <= radius - 2 ? color : "#000000";
       } else {
-        return "#FFFFFF";
+        return "#000000";
       }
     });
     setColors(newColors);
@@ -410,13 +410,12 @@ function App() {
       >
         <div
           style={{
+            backgroundColor: "black",
             width: "300px",
             height: "300px",
-            border: "1px solid black",
             display: "grid",
             gridTemplateColumns: `repeat(${cols}, 10px)`,
             gap: "0",
-            backgroundColor: "white",
             padding: "10px",
           }}
         >
@@ -427,7 +426,7 @@ function App() {
             );
           })}
         </div>
-        <div style={{ padding: "1em" }}>{name}</div>
+        <div style={{ padding: "1em", color: "white" }}>{name}</div>
         <button
           style={{
             width: "300px",
