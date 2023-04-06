@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 function App() {
   const rows = 31;
@@ -8,6 +8,8 @@ function App() {
 
   const [colors, setColors] = useState(Array(rows * cols).fill("#000000"));
   const [name, setName] = useState("No Marble");
+
+  const [initial, setInitial] = useState(true);
 
   const shine = [
     198, 199, 200, 228, 229, 230, 258, 259, 260, 288, 289, 290, 318, 319, 320,
@@ -344,6 +346,14 @@ function App() {
     );
   }
 
+  function checkAndSetCookie(cookieName, cookieValue) {
+    var existingCookie = localStorage.getItem(cookieName);
+    if (existingCookie === null) {
+      localStorage.setItem(cookieName, cookieValue);
+    }
+    return existingCookie;
+  }
+
   const newName = () => {
     return `${
       magicalAdjectives[Math.floor(Math.random() * magicalAdjectives.length)]
@@ -359,6 +369,8 @@ function App() {
   };
 
   const handleMagicMarble = () => {
+    if (checkAndSetCookie()) return;
+    setInitial(false);
     const numberOfColors = Math.floor(Math.random() * 4);
     let randomColors = [
       "#" + Math.floor(Math.random() * 16777215).toString(16),
@@ -408,25 +420,59 @@ function App() {
           alignItems: "center",
         }}
       >
-        <div
-          style={{
-            backgroundColor: "black",
-            width: "300px",
-            height: "300px",
-            display: "grid",
-            gridTemplateColumns: `repeat(${cols}, 10px)`,
-            gap: "0",
-            padding: "10px",
-          }}
-        >
-          {colors.map((color, i) => {
-            if (shine.includes(i)) color = "white";
-            return (
-              <div key={i} style={{ backgroundColor: color }} id={`${i}`}></div>
-            );
-          })}
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            style={{
+              backgroundColor: "black",
+              width: "300px",
+              height: "300px",
+              display: "grid",
+              gridTemplateColumns: `repeat(${cols}, 10px)`,
+              gap: "0",
+              padding: "10px",
+            }}
+          >
+            {colors.map((color, i) => {
+              if (!initial && shine.includes(i)) color = "white";
+              return (
+                <div
+                  key={i}
+                  style={{ backgroundColor: color }}
+                  id={`${i}`}
+                ></div>
+              );
+            })}
+          </div>
         </div>
-        <div style={{ padding: "1em", color: "white" }}>{name}</div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {!initial && (
+          <>
+            <div
+              style={{
+                padding: "1em",
+                paddingBottom: "0",
+                color: "white",
+                width: "300px",
+              }}
+            >
+              {name}
+            </div>
+            <div style={{ padding: "1em", color: "white", width: "300px" }}>
+              May create a subtle and pervasive sense of unease or melancholy,
+              that is difficult to detect or understand, but can have a profound
+              impact on the person who carries it, leading to feelings of
+              isolation, hopelessness, or despair.
+            </div>
+          </>
+        )}
         <button
           style={{
             width: "300px",
