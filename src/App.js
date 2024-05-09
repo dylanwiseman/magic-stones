@@ -1,5 +1,7 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { openai } from '@ai-sdk/openai';
+import { StreamingTextResponse, streamText, generateText } from 'ai';
 
 function App() {
   const rows = 31;
@@ -8,6 +10,7 @@ function App() {
 
   const [colors, setColors] = useState(Array(rows * cols).fill("#000000"));
   const [name, setName] = useState("No Marble");
+  const [description, setDescription] = useState("No description");
 
   const [initial, setInitial] = useState(true);
 
@@ -346,13 +349,13 @@ function App() {
     );
   }
 
-  function checkAndSetCookie(cookieName, cookieValue) {
-    var existingCookie = localStorage.getItem(cookieName);
-    if (existingCookie === null) {
-      localStorage.setItem(cookieName, cookieValue);
-    }
-    return existingCookie;
-  }
+  // function checkAndSetCookie(cookieName, cookieValue) {
+  //   var existingCookie = localStorage.getItem(cookieName);
+  //   if (existingCookie === null) {
+  //     localStorage.setItem(cookieName, cookieValue);
+  //   }
+  //   return existingCookie;
+  // }
 
   const newName = () => {
     return `${
@@ -368,9 +371,17 @@ function App() {
     }`;
   };
 
-  const handleMagicMarble = () => {
-    if (checkAndSetCookie()) return;
+  const handleMagicMarble = async () => {
+    // if (checkAndSetCookie()) return;
     setInitial(false);
+
+    const result = await generateText({
+      model: openai('gpt-3.5-turbo'),
+      prompt:
+        `Given the name of this magical marble, write a 1 sentence description of what magic it might do to the person who carries it: ${name}`,
+    });
+    setDescription(result);
+    
     const numberOfColors = Math.floor(Math.random() * 4);
     let randomColors = [
       "#" + Math.floor(Math.random() * 16777215).toString(16),
@@ -466,10 +477,7 @@ function App() {
               {name}
             </div>
             <div style={{ padding: "1em", color: "white", width: "300px" }}>
-              May create a subtle and pervasive sense of unease or melancholy,
-              that is difficult to detect or understand, but can have a profound
-              impact on the person who carries it, leading to feelings of
-              isolation, hopelessness, or despair.
+              {description}
             </div>
           </>
         )}
